@@ -1,0 +1,23 @@
+GET http://localhost:4000/api/posts?page=1&sort=자유게시판
+
+###
+POST http://localhost:4000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "test11@test.com",
+  "password": "password",
+  "nickname": "apw"
+}
+
+###
+POST http://localhost:4000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password"
+}
+
+###
+DELETE http://localhost:4000/api/comments/5
