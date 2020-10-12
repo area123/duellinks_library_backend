@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e7578fc4-13ca-418a-8a27-42165f530f82" name="디폴트 변경 목록" comment="" />
+    <list default="true" id="e7578fc4-13ca-418a-8a27-42165f530f82" name="디폴트 변경 목록" comment="gitgnore 적용" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,7 +15,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1hmAZtm15tZ1O79fDIKVS8PAboB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -429,11 +433,23 @@
       <workItem from="1602301981442" duration="228000" />
       <workItem from="1602311308989" duration="2404000" />
       <workItem from="1602316021266" duration="2006000" />
-      <workItem from="1602485387005" duration="372000" />
+      <workItem from="1602485387005" duration="683000" />
     </task>
+    <task id="LOCAL-00001" summary="gitgnore 적용">
+      <created>1602486139725</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1602486139725</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="gitgnore 적용" />
+    <option name="LAST_COMMIT_MESSAGE" value="gitgnore 적용" />
   </component>
 </project>
