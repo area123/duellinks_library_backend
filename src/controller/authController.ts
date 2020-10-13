@@ -1,28 +1,6 @@
 import { Context } from 'koa';
-import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
-const serialize = async (user: User) => {
-  const data = user;
-  // @ts-ignore
-  delete data.password;
-  return data;
-};
-
-export const generateToken = (id: number, email: string) => {
-  return jwt.sign(
-    {
-      id: id,
-      email: email,
-    },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: '7d',
-    },
-  );
-};
 
 export const register = async (ctx: Context) => {
   const { email, password, nickname } = ctx.request.body;
@@ -37,22 +15,22 @@ export const register = async (ctx: Context) => {
     user.password = password;
     user.nickname = nickname;
 
-    const data = await User.save(user);
-
-    ctx.body = serialize(user);
-    const token = generateToken(data.id, data.email);
+    await user.save();
+    const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
     });
+
+    user.serialize();
+
+    ctx.body = user;
   } catch (e) {
     ctx.throw(500, e);
   }
 };
 
 export const login = async (ctx: Context) => {
-  const userRepository = await getRepository(User);
-
   const { email, password } = ctx.request.body;
 
   if (!email || !password) {
@@ -61,7 +39,8 @@ export const login = async (ctx: Context) => {
   }
 
   try {
-    const user = await userRepository.findOne({ email: email });
+    const user = await User.findOne({ email: email });
+    console.log(user);
     if (!user) {
       ctx.status = 401;
       return;
@@ -71,11 +50,9 @@ export const login = async (ctx: Context) => {
       ctx.status = 401;
       return;
     }
-    // @ts-ignore
-    delete user.password;
-    console.log(user);
+    user.serialize();
     ctx.body = user;
-    const token = generateToken(user!.id, user!.email);
+    const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
