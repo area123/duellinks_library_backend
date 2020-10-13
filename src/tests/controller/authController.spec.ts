@@ -1,6 +1,4 @@
 import request from 'supertest';
-import app from '../../app';
-
 
 describe('authController /api/auth/', () => {
   const server = request.agent('http://localhost:4000/api/auth/');

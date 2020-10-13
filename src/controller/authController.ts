@@ -40,7 +40,6 @@ export const login = async (ctx: Context) => {
 
   try {
     const user = await User.findOne({ email: email });
-    console.log(user);
     if (!user) {
       ctx.status = 401;
       return;

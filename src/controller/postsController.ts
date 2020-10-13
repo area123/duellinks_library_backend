@@ -128,7 +128,10 @@ export const update = async (ctx: Context) => {
     post.sort = sort;
     post.tags = tags;
 
-    ctx.body = await post.save();
+    await post.save();
+    post.user.serialize();
+
+    ctx.body = post;
   } catch (e) {
     ctx.throw(500, e);
   }
