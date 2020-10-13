@@ -52,9 +52,10 @@ export const write = async (ctx: Context) => {
     post.tags = tags;
     post.user = user!;
 
+    await post.save();
     post.user.serialize();
 
-    ctx.body = await post.save();
+    ctx.body = post;
   } catch (e) {
     ctx.throw(500, e);
   }

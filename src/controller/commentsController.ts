@@ -3,6 +3,7 @@ import { User } from '../entity/User';
 import { Comment } from '../entity/Comment';
 import { Post } from '../entity/Post';
 
+// id에 맞는 댓글이 있는지 확인하는 미들웨어
 export const getCommentsById = async (ctx: Context, next: Next) => {
   const { id } = ctx.params;
   try {
@@ -25,6 +26,16 @@ export const getCommentsById = async (ctx: Context, next: Next) => {
   }
 };
 
+// 사용자가 작성한 댓글인지 확인하는 미들웨어
+export const checkOwnComment = async (ctx: Context, next: Next) => {
+  const { user, comment } = ctx.state;
+  if (comment.user.id !== user.id) {
+    ctx.status = 403;
+    return;
+  }
+  return next();
+};
+
 export const write = async (ctx: Context) => {
   const { content, postId, parent } = ctx.request.body;
   const { id } = ctx.state.user;
@@ -43,23 +54,18 @@ export const write = async (ctx: Context) => {
 
     const comment = new Comment();
     comment.content = content;
-    if (user) {
+    if (user && post) {
       comment.user = user;
-    } else {
-      ctx.status = 404;
-    }
-    if (post) {
       comment.post = post;
     } else {
       ctx.status = 404;
     }
     comment.parent = parent;
 
-    const data = await comment.save();
-    // @ts-ignore
-    // delete data.user.password;
+    await comment.save();
+    comment.user.serialize();
 
-    ctx.body = data;
+    ctx.body = comment;
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -85,7 +91,11 @@ export const list = async (ctx: Context) => {
       },
       relations: ['user'],
     });
-    console.log(comments.length);
+
+    for (let i = 0; i < comments.length; i++) {
+      comments[i].user.serialize();
+    }
+
     ctx.body = comments;
   } catch (e) {
     ctx.throw(500, e);
@@ -93,15 +103,10 @@ export const list = async (ctx: Context) => {
 };
 
 export const remove = async (ctx: Context) => {
-  const { id } = ctx.params;
   try {
-    const comment = await Comment.findOne(id);
-    if (!comment) {
-      ctx.status = 404;
-      return;
-    }
-    comment?.remove();
-    ctx.body = comment;
+    const comment: Comment = ctx.state.comment;
+    await comment.remove();
+    ctx.status = 204;
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -109,14 +114,14 @@ export const remove = async (ctx: Context) => {
 
 export const update = async (ctx: Context) => {
   const { content } = ctx.request.body;
-  const { id } = ctx.params;
   try {
-    const comment = await Comment.findOne(id);
-    // @ts-ignore
-    comment?.content = content;
-    const data = await comment?.save();
-    console.log(data);
-    ctx.body = data;
+    const comment: Comment = ctx.state.comment;
+    comment.content = content;
+
+    await comment.save();
+    comment.user.serialize();
+
+    ctx.body = comment;
   } catch (e) {
     ctx.throw(500, e);
   }

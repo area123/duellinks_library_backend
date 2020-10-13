@@ -1,7 +1,6 @@
 import Router from 'koa-router';
 import * as cmtCtrl from '../../controller/commentsController';
 import checkLoggedIn from '../../lib/checkLoggedIn';
-import { checkOwnPost, getPostById } from '../../controller/postsController';
 
 const comments = new Router();
 
@@ -13,11 +12,11 @@ comments.post('/', checkLoggedIn, cmtCtrl.write);
 const comment = new Router();
 
 // 댓글 삭제
-comment.delete('/', checkLoggedIn, cmtCtrl.remove);
+comment.delete('/', checkLoggedIn, cmtCtrl.checkOwnComment, cmtCtrl.remove);
 
 // 댓글 변경
-comment.patch('/', checkLoggedIn, cmtCtrl.update);
+comment.patch('/', checkLoggedIn, cmtCtrl.checkOwnComment, cmtCtrl.update);
 
-comments.use('/:id', comment.routes());
+comments.use('/:id', cmtCtrl.getCommentsById, comment.routes());
 
 export default comments;
