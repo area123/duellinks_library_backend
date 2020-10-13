@@ -34,4 +34,35 @@ export class Post extends BaseEntity {
 
   @OneToMany(type => Comment, comment => comment.post)
   comments!: Comment[];
+
+  static findBySort(sort: string) {
+    return this.find({
+      where: [
+        {
+          sort: sort,
+        },
+      ],
+      order: {
+        id: 'DESC',
+      },
+      take: 10,
+      relations: ['user'],
+    });
+  }
+
+  static pagination(sort: string, page: number) {
+    return this.find({
+      where: [
+        {
+          sort: sort,
+        },
+      ],
+      order: {
+        id: 'DESC',
+      },
+      take: 20,
+      skip: ((page - 1) * 20),
+      relations: ['user'],
+    });
+  }
 }

@@ -37,14 +37,11 @@ export const checkOwnPost = async (ctx: Context, next: Next) => {
 };
 
 export const write = async (ctx: Context) => {
+  const { title, content, sort, tags } = ctx.request.body;
+  const { id } = ctx.state.user;
+
   try {
-    const postRepository = await getRepository(Post);
-    const userRepository = await getRepository(User);
-
-    const { title, content, sort, tags } = ctx.request.body;
-    const { id } = ctx.state.user;
-
-    const user = await userRepository.findOne({
+    const user = await User.findOne({
       id: id,
     });
 
@@ -55,7 +52,9 @@ export const write = async (ctx: Context) => {
     post.tags = tags;
     post.user = user!;
 
-    ctx.body = await postRepository.save(post);
+    post.user.serialize();
+
+    ctx.body = await post.save();
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -70,103 +69,30 @@ export const list = async (ctx: Context) => {
     return;
   }
 
-  const { tag, email } = ctx.query;
-
   try {
-    const postRepository = await getRepository(Post);
-
     if (sort === 'null') {
-      const freeBoard = await postRepository.find({
-        where: [
-          {
-            ...(email ? { 'user.email': email } : {}),
-            ...(tag ? { tags: tag } : {}),
-            sort: '자유게시판',
-          },
-        ],
-        order: {
-          id: 'DESC',
-        },
-        take: 10,
-        relations: ['user'],
-      });
-
-      const noticeBoard = await postRepository.find({
-        where: [
-          {
-            ...(email ? { 'user.email': email } : {}),
-            ...(tag ? { tags: tag } : {}),
-            sort: '공지사항',
-          },
-        ],
-        order: {
-          id: 'DESC',
-        },
-        take: 10,
-        relations: ['user'],
-      });
-
-      const gameBoard = await postRepository.find({
-        where: [
-          {
-            ...(email ? { 'user.email': email } : {}),
-            ...(tag ? { tags: tag } : {}),
-            sort: '게임',
-          },
-        ],
-        order: {
-          id: 'DESC',
-        },
-        take: 10,
-        relations: ['user'],
-      });
-
-      const consoleBoard = await postRepository.find({
-        where: [
-          {
-            ...(email ? { 'user.email': email } : {}),
-            ...(tag ? { tags: tag } : {}),
-            sort: '콘솔',
-          },
-        ],
-        order: {
-          id: 'DESC',
-        },
-        take: 10,
-        relations: ['user'],
-      });
+      const freeBoard = await Post.findBySort('자유게시판');
+      const noticeBoard = await Post.findBySort('공지사항');
+      const gameBoard = await Post.findBySort('게임');
+      const consoleBoard = await Post.findBySort('콘솔');
 
       const posts = freeBoard.concat(noticeBoard, gameBoard, consoleBoard);
 
       for (let i = 0; i < posts.length; i++) {
-        // @ts-ignore
-        delete posts[i].user.password;
+        posts[i].user.serialize();
       }
 
       ctx.body = posts;
     } else {
-      const posts = await Post.find({
-        where: [
-          {
-            sort: sort,
-          },
-        ],
-        order: {
-          id: 'DESC',
-        },
-        take: 20,
-        skip: ((page - 1) * 20),
-        relations: ['user'],
-      });
+      const posts = await Post.pagination(sort, page);
 
       for (let i = 0; i < posts.length; i++) {
-        // @ts-ignore
-        delete posts[i].user.password;
+        posts[i].user.serialize();
       }
 
       const count = await Post.count({
         where: {
-          sort: sort
+          sort: sort,
         },
       });
       const lastPage = Math.ceil(count / 20);
@@ -185,9 +111,8 @@ export const read = async (ctx: Context) => {
 
 export const remove = async (ctx: Context) => {
   try {
-    const postRepository = await getRepository(Post);
     const post = ctx.state.post;
-    await postRepository.remove(post);
+    await post.remove();
     ctx.status = 204;
   } catch (e) {
     ctx.throw(500, e);
@@ -203,7 +128,7 @@ export const update = async (ctx: Context) => {
     post.sort = sort;
     post.tags = tags;
 
-    ctx.body = await Post.save(post);
+    ctx.body = await post.save();
   } catch (e) {
     ctx.throw(500, e);
   }
