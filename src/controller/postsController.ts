@@ -3,7 +3,6 @@ import { getRepository } from 'typeorm';
 import { Post } from '../entity/Post';
 import { User } from '../entity/User';
 
-
 // id에 맞는 post가 있으면 ctx.state에 post를 넣음
 export const getPostById = async (ctx: Context, next: Next) => {
   const { id } = ctx.params;

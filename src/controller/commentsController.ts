@@ -7,7 +7,7 @@ import { Post } from '../entity/Post';
 export const getCommentsById = async (ctx: Context, next: Next) => {
   const { id } = ctx.params;
   try {
-    const comment = await Comment.find({
+    const comment = await Comment.findOne({
       where: {
         id: id,
       },
