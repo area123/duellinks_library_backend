@@ -38,6 +38,7 @@ const option: ConnectionOptions = {
     console.log('데이터베이스의 연결에 문제가 생겼습니다. ㅠㅠ');
     console.log(e);
     console.log(option);
+    console.log(option);
   }
 })();
 
