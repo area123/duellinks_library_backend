@@ -28,6 +28,7 @@ const option: ConnectionOptions = {
   synchronize: true,
   logging: false,
   entities: entities,
+  connectTimeout: 1000000000
 };
 
 (async () => {
@@ -37,7 +38,6 @@ const option: ConnectionOptions = {
   } catch (e) {
     console.log('데이터베이스의 연결에 문제가 생겼습니다. ㅠㅠ');
     console.log(e);
-    console.log(option);
     console.log(option);
   }
 })();
