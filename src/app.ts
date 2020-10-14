@@ -10,15 +10,24 @@ import send from 'koa-send';
 import api from './api';
 import jwtMiddleware from './lib/jwtMiddleware';
 
+let entities = [];
+
+if (process.env.MODE === 'production') {
+  entities = ['dist/entity/**/*.*'];
+} else {
+  entities = ['src/entity/**/*.*'];
+}
+
 const option: ConnectionOptions = {
   type: 'mariadb',
+  host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
   port: parseInt(process.env.DB_PORT!, 10),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   synchronize: true,
   logging: false,
-  entities: ['src/entity/**/*.*'],
+  entities: entities,
 };
 
 (async () => {
