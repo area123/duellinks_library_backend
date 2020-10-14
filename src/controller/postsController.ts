@@ -1,5 +1,4 @@
 import { Context, Next } from 'koa';
-import { getRepository } from 'typeorm';
 import { Post } from '../entity/Post';
 import { User } from '../entity/User';
 

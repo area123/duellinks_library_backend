@@ -6,7 +6,7 @@ export default class CreatePosts implements Seeder {
     const sort = ['자유게시판', '공지사항', '게임', '콘솔'];
 
     for (let i = 0; i < 4; i++) {
-      await factory(Post)().createMany(20, {
+      await factory(Post)().createMany(180, {
         sort: sort[i],
       });
     }
