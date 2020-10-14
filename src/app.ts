@@ -14,7 +14,7 @@ let entities = [];
 let migrations = [];
 let subscribers = [];
 
-if (process.env.mode === 'production') {
+if (process.env.MODE === 'production') {
   entities = ['entity/**/*.js'];
   migrations = ['migrations/**/*.js'];
   subscribers = ['subscribers/**/*.js'];
