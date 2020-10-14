@@ -5,9 +5,8 @@
   "license": "MIT",
   "scripts": {
     "tsc": "tsc",
-    "postinstall": "npm run tsc",
-    "build": "tsc",
-    "start": "npm run tsc && dist/server.js",
+    "build": "npm install && npm nun tsc",
+    "start": "npm install && npm run tsc && node dist/server.js",
     "dev": "ts-node src/server.ts",
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
