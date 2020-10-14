@@ -18,7 +18,7 @@ const option: ConnectionOptions = {
   password: process.env.DB_PASSWORD,
   synchronize: true,
   logging: false,
-  entities: ['entity/**/*.*'],
+  entities: ['src/entity/**/*.*'],
 };
 
 (async () => {
