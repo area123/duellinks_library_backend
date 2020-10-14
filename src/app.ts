@@ -10,20 +10,6 @@ import send from 'koa-send';
 import api from './api';
 import jwtMiddleware from './lib/jwtMiddleware';
 
-let entities = [];
-let migrations = [];
-let subscribers = [];
-
-if (process.env.MODE === 'production') {
-  entities = ['entity/**/*.js'];
-  migrations = ['migrations/**/*.js'];
-  subscribers = ['subscribers/**/*.js'];
-} else {
-  entities = ['entity/**/*.ts'];
-  migrations = ['migrations/**/*.ts'];
-  subscribers = ['subscribers/**/*.ts'];
-}
-
 const option: ConnectionOptions = {
   type: 'mariadb',
   database: process.env.DB_DATABASE,
@@ -32,9 +18,7 @@ const option: ConnectionOptions = {
   password: process.env.DB_PASSWORD,
   synchronize: true,
   logging: false,
-  entities: entities,
-  migrations: migrations,
-  subscribers: subscribers,
+  entities: ['entity/**/*.*'],
 };
 
 (async () => {
