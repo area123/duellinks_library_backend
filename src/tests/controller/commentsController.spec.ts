@@ -15,9 +15,9 @@ describe('commentsController /api/comments/', () => {
 
   it('list', async () => {
     const response = await server
-      .get('comments?postId=261');
+      .get('comments?postId=4338');
     expect(response.status).toBe(200);
-    expect(response.body.length).toBe(9);
+    expect(response.body.length > 1).toBe(true);
     expect('password' in response.body[0].user).toBe(false);
   });
 

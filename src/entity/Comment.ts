@@ -18,6 +18,11 @@ export class Comment extends BaseEntity {
   })
   parent!: number;
 
+  @Column({
+    default: 1,
+  })
+  seq!: number;
+
   @CreateDateColumn()
   createdAt!: Date;
 
@@ -26,4 +31,12 @@ export class Comment extends BaseEntity {
 
   @ManyToOne(type => Post, post => post.comments)
   post!: Post;
+
+  static findByPost(postId: number) {
+    return this.createQueryBuilder("comment")
+      .leftJoinAndSelect('comment.user', 'user')
+      .where('comment.postId = :postId', { postId: postId })
+      .orderBy('IF(ISNULL(comment.parent), comment.id, comment.parent), comment.seq')
+      .getMany();
+  }
 }

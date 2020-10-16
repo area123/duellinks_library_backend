@@ -1,6 +1,9 @@
 GET http://localhost:4000/api/posts?page=1&sort=자유게시판
 
 ###
+GET http://localhost:4000/api/comments?postId=4338
+
+###
 POST http://localhost:4000/api/auth/login
 Content-Type: application/json
 

@@ -83,14 +83,8 @@ export const list = async (ctx: Context) => {
       ctx.status = 404;
       return;
     }
-    const comments = await Comment.find({
-      where: {
-        post: {
-          id: postId,
-        },
-      },
-      relations: ['user'],
-    });
+    const comments = await Comment.findByPost(postId);
+    console.log(comments);
 
     for (let i = 0; i < comments.length; i++) {
       comments[i].user.serialize();

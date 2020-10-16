@@ -19,7 +19,7 @@ if (process.env.MODE === 'production') {
 }
 
 const option: ConnectionOptions = {
-  type: 'mariadb',
+  type: 'mysql',
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
   port: parseInt(process.env.DB_PORT!, 10),
