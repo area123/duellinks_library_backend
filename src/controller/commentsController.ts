@@ -37,7 +37,7 @@ export const checkOwnComment = async (ctx: Context, next: Next) => {
 };
 
 export const write = async (ctx: Context) => {
-  const { content, postId, parent } = ctx.request.body;
+  const { content, postId, parent, seq } = ctx.request.body;
   const { id } = ctx.state.user;
   try {
     const user = await User.findOne({
@@ -61,6 +61,7 @@ export const write = async (ctx: Context) => {
       ctx.status = 404;
     }
     comment.parent = parent;
+    comment.seq = seq;
 
     await comment.save();
     comment.user.serialize();
@@ -84,7 +85,6 @@ export const list = async (ctx: Context) => {
       return;
     }
     const comments = await Comment.findByPost(postId);
-    console.log(comments);
 
     for (let i = 0; i < comments.length; i++) {
       comments[i].user.serialize();
@@ -107,10 +107,12 @@ export const remove = async (ctx: Context) => {
 };
 
 export const update = async (ctx: Context) => {
-  const { content } = ctx.request.body;
+  const { content, parent, seq } = ctx.request.body;
   try {
     const comment: Comment = ctx.state.comment;
     comment.content = content;
+    comment.parent = parent;
+    comment.seq = seq;
 
     await comment.save();
     comment.user.serialize();
