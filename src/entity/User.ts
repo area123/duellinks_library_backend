@@ -6,7 +6,7 @@ import {
   CreateDateColumn, BeforeInsert,
 } from 'typeorm';
 import { Post } from './Post';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { Comment } from './Comment';
 import jwt from 'jsonwebtoken';
 

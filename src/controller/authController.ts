@@ -1,6 +1,6 @@
 import { Context } from 'koa';
 import { User } from '../entity/User';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 export const register = async (ctx: Context) => {
   const { email, password, nickname } = ctx.request.body;

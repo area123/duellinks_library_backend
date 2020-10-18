@@ -9,17 +9,12 @@ import send from 'koa-send';
 
 import api from './api';
 import jwtMiddleware from './lib/jwtMiddleware';
-
-let entities = [];
-
-if (process.env.MODE === 'production') {
-  entities = ['dist/entity/**/*.*'];
-} else {
-  entities = ['src/entity/**/*.*'];
-}
+import { User } from './entity/User';
+import { Post } from './entity/Post';
+import { Comment } from './entity/Comment';
 
 const option: ConnectionOptions = {
-  type: 'mysql',
+  type: 'mariadb',
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
   port: parseInt(process.env.DB_PORT!, 10),
@@ -27,8 +22,7 @@ const option: ConnectionOptions = {
   password: process.env.DB_PASSWORD,
   synchronize: true,
   logging: false,
-  entities: entities,
-  connectTimeout: 1000000000
+  entities: [User, Post, Comment],
 };
 
 (async () => {
