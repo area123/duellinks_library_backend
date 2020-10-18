@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.73e2e07b8dc1be6711997c49d7ebe802.js"
+  "/precache-manifest.bb494e2229c16eeb06867ec993a176a1.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "duellinks_library"});

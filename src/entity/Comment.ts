@@ -18,9 +18,7 @@ export class Comment extends BaseEntity {
   })
   parent!: number;
 
-  @Column({
-    default: 1,
-  })
+  @Column()
   seq!: number;
 
   @CreateDateColumn()

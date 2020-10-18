@@ -2,6 +2,7 @@ import { Context, Next } from 'koa';
 import { User } from '../entity/User';
 import { Comment } from '../entity/Comment';
 import { Post } from '../entity/Post';
+import { Not, IsNull } from 'typeorm';
 
 // id에 맞는 댓글이 있는지 확인하는 미들웨어
 export const getCommentsById = async (ctx: Context, next: Next) => {
@@ -84,7 +85,34 @@ export const list = async (ctx: Context) => {
       ctx.status = 404;
       return;
     }
-    const comments = await Comment.findByPost(postId);
+
+    const comments = await Comment.find({
+      where: {
+        parent: IsNull(),
+        post: {
+          id: postId,
+        },
+      },
+      relations: ['user'],
+    });
+
+    const comments1 = await Comment.find({
+      where: {
+        parent: Not(IsNull()),
+        post: {
+          id: postId,
+        },
+      },
+      relations: ['user'],
+    });
+
+    for (let i = 0; i < comments.length; i++) {
+      for (let j = 0; j < comments1.length; j++) {
+        if (comments[i].id === comments1[j].parent) {
+          comments.splice(i + 1, 0, comments1[j]);
+        }
+      }
+    }
 
     for (let i = 0; i < comments.length; i++) {
       comments[i].user.serialize();
