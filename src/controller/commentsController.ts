@@ -3,6 +3,7 @@ import { User } from '../entity/User';
 import { Comment } from '../entity/Comment';
 import { Post } from '../entity/Post';
 import { Not, IsNull } from 'typeorm';
+import logger from '../winston';
 
 // id에 맞는 댓글이 있는지 확인하는 미들웨어
 export const getCommentsById = async (ctx: Context, next: Next) => {
@@ -17,6 +18,7 @@ export const getCommentsById = async (ctx: Context, next: Next) => {
 
     if (!comment) {
       ctx.status = 404;
+      logger.info('댓글이 존재하지 않습니다.');
       return;
     }
 
@@ -24,6 +26,7 @@ export const getCommentsById = async (ctx: Context, next: Next) => {
     return next();
   } catch (e) {
     ctx.throw(500, e);
+    logger.error(`${ctx.url}에서 오류 발생`);
   }
 };
 
@@ -32,6 +35,7 @@ export const checkOwnComment = async (ctx: Context, next: Next) => {
   const { user, comment } = ctx.state;
   if (comment.user.id !== user.id) {
     ctx.status = 403;
+    logger.info('사용자가 작성한 댓글이 아닙니다.');
     return;
   }
   return next();
@@ -60,6 +64,7 @@ export const write = async (ctx: Context) => {
       comment.post = post;
     } else {
       ctx.status = 404;
+      logger.info('댓글을 작성할 포스트가 없습니다.');
     }
     comment.parent = parent;
     comment.seq = seq;
@@ -70,6 +75,7 @@ export const write = async (ctx: Context) => {
     ctx.body = comment;
   } catch (e) {
     ctx.throw(500, e);
+    logger.error(`${ctx.url}에서 오류 발생`);
   }
 };
 

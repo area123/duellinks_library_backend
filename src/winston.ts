@@ -4,7 +4,6 @@ import 'winston-daily-rotate-file';
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
   transports: [
     new winston.transports.DailyRotateFile({
       filename: 'log/%DATE%-error.log',

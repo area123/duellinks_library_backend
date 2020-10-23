@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Context, Next } from 'koa';
 import { User } from '../entity/User';
+import logger from '../winston';
 
 const jwtMiddleware = async (ctx: Context, next: Next) => {
   const token = ctx.cookies.get('access_token');
@@ -20,8 +21,10 @@ const jwtMiddleware = async (ctx: Context, next: Next) => {
         httpOnly: true,
       });
     }
+    logger.info('jwt 토큰 검증 완료');
     return next();
   } catch (e) {
+    logger.info('jwt 토큰 검증 실패');
     return next();
   }
 };
